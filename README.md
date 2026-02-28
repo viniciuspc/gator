@@ -1,7 +1,12 @@
-# gator
+# Gator
 An RSS feed aggregator in TypeScript! We'll call it "Gator", you know, because aggreGATOR 🐊.
 
-## Run the progam.
+### Prerequisites:
+
+- Install [nvm](https://github.com/nvm-sh/nvm?tab=readme-ov-file#installing-and-updating) to manage node.js versions.
+
+### Run the progam.
+
 Use the node.js version from .nvmrc
 ```bash
 nvm use
