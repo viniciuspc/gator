@@ -1,4 +1,4 @@
-import { CommandRegistry, handlerLogin, handlerRegister, handlerReset, handlerUsers, runCommand } from "./command";
+import { CommandRegistry, handlerAgg, handlerLogin, handlerRegister, handlerReset, handlerUsers, runCommand } from "./command";
 
 
 async function main() {
@@ -8,7 +8,8 @@ async function main() {
       "login": handlerLogin , 
       "register": handlerRegister,
       "reset": handlerReset,
-      "users": handlerUsers
+      "users": handlerUsers,
+      "agg": handlerAgg
     }
   };
 

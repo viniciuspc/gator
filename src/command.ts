@@ -1,5 +1,6 @@
 import { setUser, readConfig } from "./config"
 import { createUser, getUserByName, getUsers, resetUsers } from "./lib/db/queries/users";
+import { fetchFeed } from "./rss";
 
 export type CommandHandler = (
   cmdName: string,
@@ -49,6 +50,15 @@ export async function handlerUsers(cmdName: string, ...args: string[]) {
   for(const user of users){
     console.log(`* ${user.name}${user.name === readConfig().currentUserName ? " (current)" : ""}`);  
   }
+}
+
+
+export async function handlerAgg(cmdName: string, ...args: string[]) {
+  
+  const feedUrl = "https://www.wagslane.dev/index.xml";
+  
+  const rssFeed = await fetchFeed(feedUrl);
+  console.dir(rssFeed, {depth: null});
 }
 
 
