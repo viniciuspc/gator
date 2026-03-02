@@ -1,6 +1,5 @@
-import { log } from "node:console";
-import { setUser } from "./config"
-import { createUser, getUserByName } from "./lib/db/queries/users";
+import { setUser, readConfig } from "./config"
+import { createUser, getUserByName, getUsers, resetUsers } from "./lib/db/queries/users";
 
 export type CommandHandler = (
   cmdName: string,
@@ -39,6 +38,19 @@ export async function handlerRegister(cmdName: string, ...args: string[]) {
   console.log(`User ${username} was registred to the database.`);
   console.log(`User created user: ${userCreated.id} | ${userCreated.name} | ${userCreated.createdAt} | ${userCreated.updatedAt} `)
 }
+
+export async function handlerReset(cmdName: string, ...args: string[]) {
+  await resetUsers();
+  console.log(`All users deleted.`)
+}
+
+export async function handlerUsers(cmdName: string, ...args: string[]) {
+  const users = await getUsers();
+  for(const user of users){
+    console.log(`* ${user.name}${user.name === readConfig().currentUserName ? " (current)" : ""}`);  
+  }
+}
+
 
 
 export function registerCommand(resgistry: CommandRegistry, cmdName: string, handler: CommandHandler) {

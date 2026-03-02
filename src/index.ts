@@ -1,4 +1,4 @@
-import { CommandRegistry, handlerLogin, handlerRegister, runCommand } from "./command";
+import { CommandRegistry, handlerLogin, handlerRegister, handlerReset, handlerUsers, runCommand } from "./command";
 
 
 async function main() {
@@ -6,7 +6,9 @@ async function main() {
   const registry: CommandRegistry = {
     commands: {
       "login": handlerLogin , 
-      "register": handlerRegister
+      "register": handlerRegister,
+      "reset": handlerReset,
+      "users": handlerUsers
     }
   };
 

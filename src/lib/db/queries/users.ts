@@ -12,3 +12,11 @@ export async function getUserByName(name: string){
     .from(users)
     .where(sql`${users.name} = ${name}`);
 }
+
+export async function resetUsers(){
+  return await db.delete(users);
+}
+
+export async function getUsers(){
+  return await db.select().from(users);
+}
