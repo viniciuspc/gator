@@ -16,54 +16,50 @@ type RSSItem = {
   pubDate: string;
 };
 
-export async function fetchFeed(feedURL: string) {
-  console.log(`Fetching RSS from: ${feedURL}`);
-
+export async function fetchFeed(feedURL: string): Promise<RSSFeed> {
   const response = await fetch(feedURL, {
     headers: {
-      "User-Agent": "viniciuspc-gator"
+      "User-Agent": "gator",
+      "Accept": "application/xml, text/xml" // Good practice for RSS
     }
-  })
+  });
 
-  const xml = await response.text();
-
-  const parser = new XMLParser();
-
-  const parsedXml = parser.parse(xml);
-
-
-  const { channel } = parsedXml.rss;
-
-  if (channel) {
-
-    const { title, link, description, item } = channel;
-
-    if (title && link && description) {
-
-      const items = new Array<RSSItem>;
-
-      if (item) {
-        if (Array.isArray(item)) {
-          for (const { title, link, description, pubDate } of item) {
-            if (title && link && description && pubDate) {
-              items.push({ title, link, description, pubDate })
-            }
-          }
-        } else {
-          const { title, link, description, pubDate } = item;
-          items.push({ title, link, description, pubDate })
-
-        }
-      }
-
-      const rssFeed: RSSFeed = { channel: { title, link, description, item: items } }
-      return rssFeed;
-    } else {
-      throw Error("Title or link or description does not exists.")
-    }
-
-  } else {
-    throw Error("Channel does not exists.")
+  if (!response.ok) {
+    throw new Error(`Failed to fetch feed: ${response.status}`);
   }
 
+  const xml = await response.text();
+  const parser = new XMLParser();
+  const parsedXml = parser.parse(xml);
+
+  const channel = parsedXml.rss?.channel;
+  if (!channel || !channel.title || !channel.link || !channel.description) {
+    throw new Error("Missing channel metadata");
+  }
+
+  // Normalize items to an array
+  const rawItems = channel.item 
+    ? (Array.isArray(channel.item) ? channel.item : [channel.item])
+    : [];
+
+  const items: RSSItem[] = [];
+  for (const item of rawItems) {
+    if (item.title && item.link && item.description && item.pubDate) {
+      items.push({
+        title: item.title,
+        link: item.link,
+        description: item.description,
+        pubDate: item.pubDate
+      });
+    }
+  }
+
+  return {
+    channel: {
+      title: channel.title,
+      link: channel.link,
+      description: channel.description,
+      item: items
+    }
+  };
 }
