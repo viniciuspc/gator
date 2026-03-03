@@ -1,15 +1,5 @@
-import { setUser, readConfig } from "./config"
-import { createUser, getUserByName, getUsers, resetUsers } from "./lib/db/queries/users";
-import { fetchFeed } from "./rss";
-
-export type CommandHandler = (
-  cmdName: string,
-  ...args: string[]
-) => Promise<void>;
-
-export type CommandRegistry = {
-  commands: Record<string, CommandHandler>
-};
+import { readConfig, setUser } from "src/config";
+import { createUser, getUserByName, getUsers, resetUsers } from "src/lib/db/queries/users";
 
 export async function handlerLogin(cmdName: string, ...args: string[]) {
   if (args.length === 0) {
@@ -53,25 +43,3 @@ export async function handlerUsers(cmdName: string, ...args: string[]) {
 }
 
 
-export async function handlerAgg(cmdName: string, ...args: string[]) {
-  
-  const feedUrl = "https://www.wagslane.dev/index.xml";
-  
-  const rssFeed = await fetchFeed(feedUrl);
-  console.dir(rssFeed, {depth: null});
-}
-
-
-
-export function registerCommand(resgistry: CommandRegistry, cmdName: string, handler: CommandHandler) {
-  resgistry.commands[cmdName] = handler;
-}
-
-export async function runCommand(resgistry: CommandRegistry, cmdName: string, ...args: string[]) {
-  const commandHandler = resgistry.commands[cmdName];
-  if (commandHandler) {
-    await commandHandler(cmdName, ...args);
-  } else {
-    throw Error(`Handler for command ${cmdName} not found in registry: ${resgistry}`)
-  }
-}

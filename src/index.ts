@@ -1,17 +1,19 @@
-import { CommandRegistry, handlerAgg, handlerLogin, handlerRegister, handlerReset, handlerUsers, runCommand } from "./command";
+import { handlerAgg } from "./commands/aggregator";
+import { CommandRegistry, registerCommand, runCommand } from "./commands/commands";
+import { handlerLogin, handlerRegister, handlerReset, handlerUsers } from "./commands/users";
 
 
 async function main() {
 
-  const registry: CommandRegistry = {
-    commands: {
-      "login": handlerLogin , 
-      "register": handlerRegister,
-      "reset": handlerReset,
-      "users": handlerUsers,
-      "agg": handlerAgg
-    }
-  };
+  const registry: CommandRegistry = { commands: {} }
+
+  registerCommand(registry, "login", handlerLogin);
+  registerCommand(registry, "register", handlerRegister);
+  registerCommand(registry, "reset", handlerReset);
+  registerCommand(registry, "users", handlerUsers);
+  registerCommand(registry, "agg", handlerAgg);
+
+
 
   const processArgs = process.argv.slice(2);
 
