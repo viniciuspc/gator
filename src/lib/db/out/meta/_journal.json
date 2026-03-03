@@ -8,6 +8,20 @@
       "when": 1772453319084,
       "tag": "0000_real_the_captain",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1772539503262,
+      "tag": "0001_magenta_gertrude_yorkes",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1772541691196,
+      "tag": "0002_volatile_lady_bullseye",
+      "breakpoints": true
     }
   ]
 }
