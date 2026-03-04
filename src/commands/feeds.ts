@@ -1,4 +1,5 @@
 import { readConfig } from "src/config";
+import { createFeedFollow } from "src/lib/db/queries/feedFollows";
 import { createFeed, Feed, getFeeds } from "src/lib/db/queries/feeds";
 import { getUserByName, User } from "src/lib/db/queries/users";
 
@@ -8,9 +9,9 @@ export async function handlerAddFeed(cmdName: string, ...args: string[]) {
     throw "There are no user logged in.";
   }
 
-  const users = await getUserByName(currentUsername);
+  const [user] = await getUserByName(currentUsername);
 
-  if (!users || users.length == 0 || users.length > 1) {
+  if (!user ) {
     throw `Can´t get user ${currentUsername} from the database.`;
   }
 
@@ -18,12 +19,13 @@ export async function handlerAddFeed(cmdName: string, ...args: string[]) {
     throw "addfeed needs 2 parameters: Name and URL"
   }
 
-  const feedName = args[0];
-  const url = args[1];
+  const [feedName, url] = args;
 
-  const feed = await createFeed(feedName, url, users[0].id);
+  const feed = await createFeed(feedName, url, user.id);
+  
+  await createFeedFollow(user.id, feed.id);
 
-  printFeed(feed, users[0]);
+  printFeed(feed, user);
 }
 
 export async function handlerFeeds(cmdName: string, ...args: string[]) {

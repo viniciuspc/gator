@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import { db } from "..";
 import { feeds, users } from "../schema";
 
@@ -16,3 +16,12 @@ export async function getFeeds(){
     userName: users.name
   }).from(feeds).innerJoin(users, eq(users.id, feeds.userId));
 }
+
+export async function getFeedByURL(url: string){
+  return await db.select()
+    .from(feeds)
+    .where(sql`${feeds.url} = ${url}`)
+    .limit(1);
+}
+
+
