@@ -1,22 +1,10 @@
-import { readConfig } from "src/config";
 import { createFeedFollow, getFeedFollowsForUser } from "src/lib/db/queries/feedFollows";
 import { getFeedByURL } from "src/lib/db/queries/feeds";
-import { getUserByName } from "src/lib/db/queries/users";
+import { User } from "src/lib/db/queries/users";
 
-export async function handlerFollow(cmdName: string, ...args: string[]){
+export async function handlerFollow(cmdName: string, user: User, ...args: string[]){
   if(args.length != 1){
     throw "follow needs 1 arguments: The feed URL to follow."
-  }
-
-  const currentUsername = readConfig().currentUserName;
-  if (!currentUsername) {
-    throw "There are no user logged in.";
-  }
-
-  const [user] = await getUserByName(currentUsername);
-
-  if (!user) {
-    throw `Can´t get user ${currentUsername} from the database.`;
   }
 
   const [feedUrl] = args;
@@ -38,19 +26,7 @@ export async function handlerFollow(cmdName: string, ...args: string[]){
 
 };
 
-export async function handlerFollowing(cmdName: string, ...args: string[]){
-
-  const currentUsername = readConfig().currentUserName;
-  if (!currentUsername) {
-    throw "There are no user logged in.";
-  }
-
-  const [user] = await getUserByName(currentUsername);
-
-  if (!user) {
-    throw `Can´t get user ${currentUsername} from the database.`;
-  }
-
+export async function handlerFollowing(cmdName: string, user: User, ...args: string[]){
   const feedFollows = await getFeedFollowsForUser(user.id);
 
   console.log(`Found ${feedFollows.length} feeds for user ${user.name}`)

@@ -1,20 +1,9 @@
-import { readConfig } from "src/config";
 import { createFeedFollow } from "src/lib/db/queries/feedFollows";
 import { createFeed, Feed, getFeeds } from "src/lib/db/queries/feeds";
-import { getUserByName, User } from "src/lib/db/queries/users";
+import {  User } from "src/lib/db/queries/users";
 
-export async function handlerAddFeed(cmdName: string, ...args: string[]) {
-  const currentUsername = readConfig().currentUserName;
-  if (!currentUsername) {
-    throw "There are no user logged in.";
-  }
-
-  const [user] = await getUserByName(currentUsername);
-
-  if (!user ) {
-    throw `Can´t get user ${currentUsername} from the database.`;
-  }
-
+export async function handlerAddFeed(cmdName: string, user: User, ...args: string[]) {
+  
   if (args.length < 2) {
     throw "addfeed needs 2 parameters: Name and URL"
   }
