@@ -1,4 +1,3 @@
-import { integer } from "drizzle-orm/gel-core";
 import { pgTable, timestamp, uuid, text, unique } from "drizzle-orm/pg-core";
 
 export const users = pgTable("users", {
@@ -38,8 +37,8 @@ export const feedFollows = pgTable("feed_follows", {
   feedId: uuid("feed_id")
     .references(() => feeds.id, {onDelete: "cascade" })
     .notNull(),
-}, (t) => ({
-  userFeed: unique('user_feed_unique').on(t.userId, t.feedId),
-}));
+}, (t) => [
+  unique('user_feed_unique').on(t.userId, t.feedId),
+]);
 
 
