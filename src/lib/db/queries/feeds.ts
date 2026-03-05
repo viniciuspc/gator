@@ -24,4 +24,16 @@ export async function getFeedByURL(url: string){
     .limit(1);
 }
 
+export async function markFeedFetched(feedId: string): Promise<Feed> {
+  const [markedFeedFetched] = await db.update(feeds).set({lastFetchedAt: new Date()}).where(eq(feeds.id, feedId)).returning();
+  return markedFeedFetched;
+}
 
+export async function getNextFeedToFetch(): Promise<Feed> {
+ const [nextFeedToFecth] = await db.select()
+  .from(feeds)
+  .orderBy(sql`last_fetched_at ASC NULLS FIRST`)
+  .limit(1);
+
+  return nextFeedToFecth;
+}
