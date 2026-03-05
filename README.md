@@ -28,3 +28,14 @@ Start gator with:
 ```bash
 npm run start
 ```
+
+### Commands:
+
+- `npm run start register USERNAME`: To register a new user and login.
+- `npm run start login USERNAME`: To login with an existed user and login.
+- `npm run start addfeed NAME URL`: To register a new feed and follow it.
+- `npm run start feeds`: To list all feeds.
+- `npm run start follow URL`: To follow a feed.
+- `npm run start unfollow URL`: To unfollow a feed.
+- `npm run start agg`: To start the aggregator to save posts of the created feeds.
+- `npm run start browser LIMIT(Optional)`: To see the posts of the feeds that you are following. 
