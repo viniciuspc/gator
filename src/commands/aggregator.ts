@@ -1,4 +1,5 @@
 import { getNextFeedToFetch, markFeedFetched } from "src/lib/db/queries/feeds";
+import { createPost } from "src/lib/db/queries/posts";
 import { fetchFeed } from "src/lib/rss";
 
 export async function handlerAgg(cmdName: string, ...args: string[]) {
@@ -34,7 +35,17 @@ async function scrapeFeeds() {
     `Items in fetched rss feed ${nextFedToFetch.name} - ${nextFedToFetch.url}`,
   );
   for (const item of rssFeed.channel.item) {
-    console.log(` - ${item.title}`);
+    createPost(
+      nextFedToFetch.id,
+      item.link,
+      new Date(Date.parse(item.pubDate)),
+      item.title,
+      item.description
+    );
+    console.log(` - Title: ${item.title}`);
+    console.log(`   PubDate: ${Date.parse(item.pubDate)}`);
+    console.log(`   Link: ${item.link}`);
+    console.log(`   Description: ${item.description}`);
   }
 }
 
